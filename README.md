@@ -1,23 +1,27 @@
 # AI News & Research Agent
 
-An intelligence research agent and interactive Streamlit application engineered to discover, score, verify, and summarize current developments across exactly three domains:
-1. **Cricket News** (Major records & margin victories, Test cricket milestones, decisive international match updates, confirmed player announcements).
-2. **Geopolitics** (High-impact security, diplomatic treaties, sanctions, and India's strategic foreign policy).
-3. **AI News & Research** (Peer-reviewed arXiv papers, frontier & open-weight model launches, key infrastructure & tooling shifts).
+An autonomous intelligence research agent and interactive Streamlit application engineered to discover, score, verify, and summarize current developments across exactly three domains:
+1. **Cricket News** (Major records & historic margin victories, Test cricket milestones, decisive international match updates, confirmed player announcements).
+2. **Geopolitics** (High-impact security dispatches, diplomatic treaties, bilateral sanctions, and India's strategic foreign policy).
+3. **AI News & Research** (Primary arXiv pre-prints, frontier & open-weight foundation model launches, key infrastructure shifts).
 
-> **Core Product Rule**: No fabricated news, no football news, no routine cricket scorecards, mandatory original clickable links, and transparent graceful fallback when local Ollama is offline.
+> **Core Product Rule**: No fabricated news, no football news, no routine cricket scorecards, mandatory original clickable links, zero-hallucination guarantees, and cascading multi-provider LLM fallbacks.
 
 ---
 
 ## 1. Key Features & Architecture
-- **Orchestration**: Orchestrated using **LangGraph** with a declarative `StateGraph` linking request validation, multi-source ingestion, canonical normalization, story clustering, multi-factor ranking, and citation guardrails.
+- **Agentic Workflow Orchestration**: Built on **LangGraph** with a declarative `StateGraph` linking request validation, multi-source ingestion, canonical normalization, token Jaccard deduplication clustering, multi-factor ranking, and citation guardrails.
 - **Explainable Multi-Factor Ranking**:
   $$\text{Score} = w_{\text{rel}} \cdot S_{\text{rel}} + w_{\text{impact}} \cdot S_{\text{impact}} + w_{\text{rec}} \cdot S_{\text{rec}} + w_{\text{src}} \cdot S_{\text{src}} + w_{\text{corrob}} \cdot S_{\text{corrob}}$$
-- **Dual Intelligence Engine**:
-  - **Local Ollama (Qwen)**: Configurable local model (default: `qwen2.5:7b`) for structured semantic synthesis.
-  - **Heuristic Fallback Engine**: If Ollama is offline or model is missing, degrades gracefully to deterministic, zero-hallucination lead excerpting without crashing or creating fake summaries.
-- **Embedded Persistence**: SQLite repository with TTL caching for feeds and briefings to eliminate unnecessary external re-queries.
-- **Zero Paid Dependencies**: Base application functions entirely with public feeds (ESPNcricinfo, BBC, The Hindu, arXiv API) and local Ollama. Optional search providers (e.g. Tavily) are pluggable via `.env`.
+- **Cascading Multi-Provider LLM Fallback Engine**:
+  - **Groq Cloud** (`llama-3.3-70b-versatile`) — Ultra-fast primary cloud inference.
+  - **Google Gemini** (`gemini-1.5-flash`) — Secondary high-speed commercial fallback.
+  - **OpenAI** (`gpt-4o-mini`) — Tertiary resilient cloud fallback.
+  - **Local Ollama** (`qwen2.5:7b`) — Private, on-premise local LLM without external network dependencies.
+  - **Deterministic Heuristic Synthesizer** — Offline, zero-cost rule-based text synthesis that assembles ~200-word structured analytical briefings directly from verified dispatches with zero hallucinations.
+- **Production UI**: Streamlit dashboard featuring dark/light theme adaptive translucent cards (`rgba`), high-density structured metadata tables (`st.dataframe`), and direct provenance links.
+- **Enterprise Safety & Guardrails**: Server-Side Request Forgery (SSRF) defense (blocking RFC 1918, loopback, and cloud metadata IPs), prompt injection neutralization, secret redaction, and strict domain boundaries.
+- **Embedded Persistence**: SQLite repository with Write-Ahead Logging (WAL) mode and TTL caching for feeds and briefings.
 
 ---
 
@@ -47,7 +51,7 @@ ai-news-research-agent/
 │   │   ├── ai_research_sources.py # Official arXiv REST/Atom API adapter
 │   │   └── web_search.py        # Pluggable external search provider
 │   ├── services/
-│   │   ├── llm.py               # Ollama client & heuristic fallback analyzer
+│   │   ├── llm.py               # Multi-provider LLM manager & heuristic fallback
 │   │   ├── normalization.py     # URL cleaning & SHA-256 fingerprinting
 │   │   ├── deduplication.py     # Story clustering & canonical election
 │   │   ├── news_ranker.py       # Multi-factor explainable scoring engine
@@ -63,15 +67,16 @@ ai-news-research-agent/
 │   │   ├── source.py            # SourceConfig, SourceHealth, TrustLevel
 │   │   └── briefing.py          # NewsCard, NewsBriefing, CitationLink
 │   └── storage/
-│       ├── database.py          # SQLite connection manager & schema migrations
+│       ├── database.py          # SQLite connection manager (WAL mode)
 │       └── repository.py        # Persistence & cache CRUD repository
 │
 ├── frontend/
-│   └── streamlit_app.py         # Multi-tab Streamlit dashboard
+│   └── streamlit_app.py         # Production Streamlit dashboard
 ├── scheduler/
 │   └── daily_briefing.py        # Background daily briefing pre-fetcher
-├── docs/                        # PRD, DESIGN, EVALUATION, RULES, TASKS, MEMORY
-├── tests/                       # Unit, integration, guardrails & evaluation tests
+├── docs/
+│   └── DESIGN.md                # Complete System Architecture & Design Specification
+├── tests/                       # 45 automated unit, integration, guardrails & evaluation tests
 ├── requirements.txt
 ├── .env.example
 ├── .gitignore
@@ -90,7 +95,8 @@ ai-news-research-agent/
 ### Windows PowerShell
 ```powershell
 # 1. Clone repository and navigate to folder
-cd "AI NEWS AND RESEARCH AGENT"
+git clone https://github.com/Areefbaba/AI-NEWS-RESEARCH-AGENT.git
+cd "AI-NEWS-RESEARCH-AGENT"
 
 # 2. Create virtual environment
 python -m venv venv
@@ -108,7 +114,8 @@ Copy-Item .env.example .env
 ### macOS / Linux
 ```bash
 # 1. Clone repository and navigate to folder
-cd "AI NEWS AND RESEARCH AGENT"
+git clone https://github.com/Areefbaba/AI-NEWS-RESEARCH-AGENT.git
+cd "AI-NEWS-RESEARCH-AGENT"
 
 # 2. Create virtual environment
 python3 -m venv venv
@@ -125,22 +132,30 @@ cp .env.example .env
 
 ---
 
-## 4. Local Ollama & Qwen Model Setup (Optional)
-The application operates fully in **Heuristic Fallback Mode** without Ollama. To enable local AI analysis with Qwen:
+## 4. Multi-Model LLM Configuration
 
-1. **Install Ollama**: Download from [ollama.ai](https://ollama.ai).
-2. **Start Ollama Service**:
-   ```bash
-   ollama serve
-   ```
-3. **Pull Qwen Model**:
-   ```bash
-   ollama pull qwen2.5:7b
-   ```
-4. Verify local availability:
-   ```bash
-   curl http://localhost:11434/api/tags
-   ```
+The system functions **100% offline at zero token cost** out of the box using deterministic heuristics. To enable neural synthesis, add your API keys to `.env`:
+
+```env
+# Priority order: groq -> gemini -> openai -> ollama -> heuristic
+LLM_FALLBACK_ORDER=groq,gemini,openai,ollama,heuristic
+
+# 1. Groq Cloud (Free high-speed tier at https://console.groq.com)
+GROQ_API_KEY="gsk_your_groq_api_key_here"
+GROQ_MODEL=llama-3.3-70b-versatile
+
+# 2. Google Gemini (Free tier at https://aistudio.google.com)
+GEMINI_API_KEY="AIzaSy_your_gemini_api_key_here"
+GEMINI_MODEL=gemini-1.5-flash
+
+# 3. OpenAI
+OPENAI_API_KEY="sk-your_openai_api_key_here"
+OPENAI_MODEL=gpt-4o-mini
+
+# 4. Local Ollama (Qwen)
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=qwen2.5:7b
+```
 
 ---
 
@@ -173,7 +188,7 @@ python scheduler/daily_briefing.py
 
 ## 6. Running Tests & Quality Verification
 
-Run the complete test suite:
+Run the complete test suite (45 automated tests):
 ```bash
 pytest
 ```
@@ -200,7 +215,5 @@ pytest tests/evaluation -v
 
 ---
 
-## 7. Troubleshooting & Operational FAQs
-- **Feed Returns 404 or Timeout**: External feeds are monitored by `SourceHealth`. If an external endpoint is unreachable, the error is isolated, logged as degraded, and other sources continue processing normally.
-- **Ollama Offline**: If Ollama is not running, the application displays a yellow telemetry status: `🟡 Heuristic Fallback (Offline Mode)` and directly provides extracted source paragraphs without hallucination.
-- **SSRF Blocked**: User queries or custom source URLs targeting private ranges (`127.0.0.1`, `10.0.0.0/8`, `169.254.169.254`) are intercepted and rejected with an `SSRFProtectionError`.
+## 7. Documentation
+- Detailed architectural decisions, data schemas, and pipeline diagrams are maintained in **[docs/DESIGN.md](docs/DESIGN.md)**.
