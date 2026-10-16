@@ -1,5 +1,12 @@
 # AI News & Research Agent
 
+[![Live Demo](https://img.shields.io/badge/Render-Live_Production_Demo-00C7B7?style=for-the-badge&logo=render&logoColor=white)](https://ai-news-research-agent-8sec.onrender.com/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Areefbaba/AI-NEWS-RESEARCH-AGENT)
+[![Python 3.12+](https://img.shields.io/badge/Python-3.12%20%7C%203.14-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Tests](https://img.shields.io/badge/Tests-45%20Passed-brightgreen?style=for-the-badge&logo=pytest&logoColor=white)](https://github.com/Areefbaba/AI-NEWS-RESEARCH-AGENT)
+
+🌐 **Live Production URL**: [https://ai-news-research-agent-8sec.onrender.com/](https://ai-news-research-agent-8sec.onrender.com/)
+
 An autonomous intelligence research agent and interactive Streamlit application engineered to discover, score, verify, and summarize current developments across exactly three domains:
 1. **Cricket News** (Major records & historic margin victories, Test cricket milestones, decisive international match updates, confirmed player announcements).
 2. **Geopolitics** (High-impact security dispatches, diplomatic treaties, bilateral sanctions, and India's strategic foreign policy).
@@ -161,7 +168,11 @@ OLLAMA_MODEL=qwen2.5:7b
 
 ## 5. Running the Application
 
-### Launch Streamlit Dashboard
+### Live Cloud Deployment
+The application is deployed live in production on Render:
+👉 **[https://ai-news-research-agent-8sec.onrender.com/](https://ai-news-research-agent-8sec.onrender.com/)**
+
+### Launch Streamlit Dashboard Locally
 ```bash
 streamlit run frontend/streamlit_app.py
 ```
