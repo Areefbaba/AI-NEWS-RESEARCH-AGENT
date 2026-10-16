@@ -1,0 +1,31 @@
+# Python byte code & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.venv/
+venv/
+ENV/
+env/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# SQLite Database & ephemeral files
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+outputs/*
+!outputs/.gitkeep
+!data/.gitkeep
+
+# OS generated
+.DS_Store
+Thumbs.db
